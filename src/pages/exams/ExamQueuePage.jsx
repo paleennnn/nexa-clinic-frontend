@@ -23,7 +23,8 @@ export default function ExamQueuePage() {
       <div>
         <h2 className="text-base font-semibold text-ink">Antrean Pemeriksaan</h2>
         <p className="text-sm text-ink-soft">
-          Pasien yang sudah ditandai siap diperiksa oleh Petugas Pendaftaran.
+          Pasien yang sudah ditandai siap diperiksa khusus untuk {user?.name || "Dokter"}{" "}
+          {user?.doctor?.specialization ? `(${user.doctor.specialization})` : ""}.
         </p>
       </div>
 
@@ -35,7 +36,7 @@ export default function ExamQueuePage() {
         {!isLoading && !isError && myQueue.length === 0 && (
           <EmptyState
             title="Belum ada pasien untuk diperiksa"
-            description='Registrasi akan muncul di sini setelah Petugas Pendaftaran mengubah statusnya menjadi "Pemeriksaan".'
+            description='Registrasi pasien Anda akan muncul di sini setelah Petugas Pendaftaran mengubah statusnya menjadi "Pemeriksaan".'
           />
         )}
 
@@ -45,6 +46,7 @@ export default function ExamQueuePage() {
               <tr className="border-b border-border text-xs uppercase tracking-wide text-ink-soft">
                 <th className="px-4 py-3 font-medium">No. Antrean</th>
                 <th className="px-4 py-3 font-medium">Pasien</th>
+                <th className="px-4 py-3 font-medium">Poli</th>
                 <th className="px-4 py-3 font-medium">Tanggal</th>
                 <th className="px-4 py-3 font-medium">Keluhan Awal</th>
                 <th className="px-4 py-3 font-medium text-right">Aksi</th>
@@ -55,6 +57,7 @@ export default function ExamQueuePage() {
                 <tr key={reg.id} className="border-b border-border last:border-0 hover:bg-bg/60">
                   <td className="px-4 py-3 font-mono text-ink">{reg.queue?.queueNumber || "-"}</td>
                   <td className="px-4 py-3 font-medium text-ink">{reg.patient.name}</td>
+                  <td className="px-4 py-3 text-xs text-ink-soft">{reg.poli?.name || "-"}</td>
                   <td className="px-4 py-3 text-ink-soft">{formatDate(reg.visitDate)}</td>
                   <td className="px-4 py-3 text-ink-soft">{reg.chiefComplaint}</td>
                   <td className="px-4 py-3 text-right">

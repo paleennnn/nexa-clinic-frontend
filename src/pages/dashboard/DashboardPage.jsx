@@ -59,12 +59,27 @@ export default function DashboardPage() {
     }).format(new Date());
   }, []);
 
-  // Compute active queues overview
-  const calledOrInProgressQueue = useMemo(() => {
-    return queues?.find((q) => q.status === "CALLED" || q.status === "IN_PROGRESS");
-  }, [queues]);
+  const isDoctor = user?.role === ROLES.DOKTER;
+  const doctorPoli = useMemo(
+    () => (poliList || []).find((p) => p.id === user?.doctor?.poliId),
+    [poliList, user]
+  );
 
-  // Distribution of queues by poli
+  // For doctors, filter active queues monitor to their own poli so they only see their patients
+  const displayedQueues = useMemo(() => {
+    if (!queues) return [];
+    if (isDoctor && user?.doctor?.poliId) {
+      return queues.filter((q) => q.registration?.poliId === user.doctor.poliId);
+    }
+    return queues;
+  }, [queues, isDoctor, user]);
+
+  // Compute active queues overview (scoped to doctor's poli if doctor is logged in)
+  const calledOrInProgressQueue = useMemo(() => {
+    return displayedQueues.find((q) => q.status === "CALLED" || q.status === "IN_PROGRESS");
+  }, [displayedQueues]);
+
+  // Distribution of queues by poli (clinic-wide overview)
   const queuesByPoli = useMemo(() => {
     if (!queues || !poliList) return [];
     return poliList.map((poli) => {
@@ -324,7 +339,9 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4 text-brand" />
-              <h3 className="text-sm font-semibold text-ink">Antrean Hari Ini</h3>
+              <h3 className="text-sm font-semibold text-ink">
+                {isDoctor ? `Antrean Hari Ini • ${doctorPoli?.name || "Poli Anda"}` : "Antrean Hari Ini"}
+              </h3>
             </div>
             <Link
               to="/queue"
@@ -370,9 +387,11 @@ export default function DashboardPage() {
             <div className="py-8">
               <Spinner label="Memuat data antrean..." />
             </div>
-          ) : !queues || queues.length === 0 ? (
+          ) : !displayedQueues || displayedQueues.length === 0 ? (
             <div className="py-6 text-center">
-              <p className="text-sm text-ink-soft">Belum ada antrean terdaftar hari ini.</p>
+              <p className="text-sm text-ink-soft">
+                Belum ada antrean {isDoctor ? "di poli Anda" : "terdaftar"} hari ini.
+              </p>
               <p className="text-xs text-ink-soft/70">
                 Antrean akan tampil di sini begitu pasien baru didaftarkan.
               </p>
@@ -389,7 +408,7 @@ export default function DashboardPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/60">
-                  {queues.slice(0, 5).map((q) => {
+                  {displayedQueues.slice(0, 5).map((q) => {
                     const meta = QUEUE_STATUS_META[q.status] || {
                       label: q.status,
                       tone: "neutral",
@@ -414,13 +433,13 @@ export default function DashboardPage() {
                 </tbody>
               </table>
 
-              {queues.length > 5 && (
+              {displayedQueues.length > 5 && (
                 <div className="mt-3 border-t border-border pt-2 text-center">
                   <Link
                     to="/queue"
                     className="text-xs font-medium text-brand hover:underline"
                   >
-                    Lihat {queues.length - 5} antrean lainnya di Papan Antrean →
+                    Lihat {displayedQueues.length - 5} antrean lainnya di Papan Antrean →
                   </Link>
                 </div>
               )}

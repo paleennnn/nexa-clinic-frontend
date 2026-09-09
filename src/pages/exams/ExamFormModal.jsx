@@ -192,21 +192,38 @@ export default function ExamFormModal({ open, onClose, registration }) {
             </Button>
           </div>
           {actionsArray.fields.map((field, index) => (
-            <div key={field.id} className="grid grid-cols-[2fr_2fr_auto] gap-3 rounded-lg border border-border p-3">
-              <Input
-                label="Nama Tindakan"
-                error={errors.actions?.[index]?.actionName?.message}
-                {...register(`actions.${index}.actionName`)}
-              />
-              <Input label="Catatan (opsional)" {...register(`actions.${index}.notes`)} />
-              <button
-                type="button"
-                onClick={() => actionsArray.remove(index)}
-                className="mt-6 h-fit rounded-md p-2 text-ink-soft hover:bg-rust-soft hover:text-rust cursor-pointer"
-                title="Hapus tindakan"
-              >
-                <Trash2 className="h-4 w-4" />
-              </button>
+            <div
+              key={field.id}
+              className="flex flex-col gap-3 rounded-xl border border-border bg-bg/40 p-3.5"
+            >
+              <div className="flex items-center justify-between border-b border-border/60 pb-2">
+                <span className="text-xs font-semibold uppercase tracking-wider text-ink-soft">
+                  Tindakan #{index + 1}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => actionsArray.remove(index)}
+                  className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-rust hover:bg-rust-soft cursor-pointer transition-colors"
+                  title="Hapus tindakan"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                  <span>Hapus</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <Input
+                  label="Nama Tindakan"
+                  placeholder="Contoh: Pembersihan Luka, Nebulisasi"
+                  error={errors.actions?.[index]?.actionName?.message}
+                  {...register(`actions.${index}.actionName`)}
+                />
+                <Input
+                  label="Catatan (opsional)"
+                  placeholder="Catatan tambahan tindakan..."
+                  {...register(`actions.${index}.notes`)}
+                />
+              </div>
             </div>
           ))}
         </section>
@@ -225,33 +242,59 @@ export default function ExamFormModal({ open, onClose, registration }) {
             </Button>
           </div>
           {itemsArray.fields.map((field, index) => (
-            <div key={field.id} className="grid grid-cols-[2fr_1.2fr_1fr_2fr_auto] gap-3 rounded-lg border border-border p-3">
-              <Input
-                label="Nama Obat"
-                error={errors.prescriptionItems?.[index]?.medicineName?.message}
-                {...register(`prescriptionItems.${index}.medicineName`)}
-              />
-              <Input
-                label="Dosis"
-                placeholder="3x1"
-                error={errors.prescriptionItems?.[index]?.dosage?.message}
-                {...register(`prescriptionItems.${index}.dosage`)}
-              />
-              <Input
-                type="number"
-                label="Jumlah"
-                error={errors.prescriptionItems?.[index]?.quantity?.message}
-                {...register(`prescriptionItems.${index}.quantity`)}
-              />
-              <Input label="Instruksi (opsional)" {...register(`prescriptionItems.${index}.instructions`)} />
-              <button
-                type="button"
-                onClick={() => itemsArray.remove(index)}
-                className="mt-6 h-fit rounded-md p-2 text-ink-soft hover:bg-rust-soft hover:text-rust cursor-pointer"
-                title="Hapus obat"
-              >
-                <Trash2 className="h-4 w-4" />
-              </button>
+            <div
+              key={field.id}
+              className="flex flex-col gap-3 rounded-xl border border-border bg-bg/40 p-3.5"
+            >
+              <div className="flex items-center justify-between border-b border-border/60 pb-2">
+                <span className="text-xs font-semibold uppercase tracking-wider text-ink-soft">
+                  Obat #{index + 1}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => itemsArray.remove(index)}
+                  className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-rust hover:bg-rust-soft cursor-pointer transition-colors"
+                  title="Hapus obat"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                  <span>Hapus</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-12">
+                <div className="sm:col-span-6">
+                  <Input
+                    label="Nama Obat"
+                    placeholder="Contoh: Paracetamol 500mg"
+                    error={errors.prescriptionItems?.[index]?.medicineName?.message}
+                    {...register(`prescriptionItems.${index}.medicineName`)}
+                  />
+                </div>
+                <div className="sm:col-span-3">
+                  <Input
+                    label="Dosis"
+                    placeholder="Contoh: 3x1"
+                    error={errors.prescriptionItems?.[index]?.dosage?.message}
+                    {...register(`prescriptionItems.${index}.dosage`)}
+                  />
+                </div>
+                <div className="sm:col-span-3">
+                  <Input
+                    type="number"
+                    label="Jumlah"
+                    placeholder="Contoh: 10"
+                    error={errors.prescriptionItems?.[index]?.quantity?.message}
+                    {...register(`prescriptionItems.${index}.quantity`)}
+                  />
+                </div>
+                <div className="sm:col-span-12">
+                  <Input
+                    label="Instruksi (opsional)"
+                    placeholder="Contoh: 3 kali sehari 1 tablet sesudah makan bila demam / nyeri"
+                    {...register(`prescriptionItems.${index}.instructions`)}
+                  />
+                </div>
+              </div>
             </div>
           ))}
         </section>

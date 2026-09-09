@@ -20,7 +20,9 @@ export default function QueueBoardPage() {
   const { data: poliList } = usePoliList();
 
   const [date, setDate] = useState(todayInputValue());
-  const [poliId, setPoliId] = useState("");
+  const [poliId, setPoliId] = useState(
+    () => (user?.role === ROLES.DOKTER ? user?.doctor?.poliId || "" : "")
+  );
 
   // A doctor only cares about their own poli — default the filter to it once
   // their profile loads, but leave it changeable in case they need to check another.
@@ -28,8 +30,7 @@ export default function QueueBoardPage() {
     if (user?.role === ROLES.DOKTER && user.doctor?.poliId && !poliId) {
       setPoliId(user.doctor.poliId);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [user, poliId]);
 
   const { data: queues, isLoading, isError, error, isFetching } = useQueuesList({ date, poliId });
   const callQueue = useCallQueue();
