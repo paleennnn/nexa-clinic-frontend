@@ -1,0 +1,41 @@
+import { Routes, Route, Navigate } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
+import AppLayout from "../components/layout/AppLayout";
+import LoginPage from "../pages/auth/LoginPage";
+import PatientsListPage from "../pages/patients/PatientsListPage";
+import ForbiddenPage from "../pages/ForbiddenPage";
+import NotFoundPage from "../pages/NotFoundPage";
+import { ROLES } from "../utils/roles";
+
+export default function AppRoutes() {
+  return (
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/forbidden" element={<ForbiddenPage />} />
+
+      <Route
+        element={
+          <ProtectedRoute>
+            <AppLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<Navigate to="/patients" replace />} />
+
+        <Route
+          path="/patients"
+          element={
+            <ProtectedRoute roles={[ROLES.ADMIN, ROLES.PETUGAS_PENDAFTARAN]}>
+              <PatientsListPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Poli, Dokter, Pendaftaran, Antrean, Pemeriksaan, Dashboard menyusul
+            di iterasi berikutnya begitu masing-masing dicicil. */}
+      </Route>
+
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
+  );
+}
