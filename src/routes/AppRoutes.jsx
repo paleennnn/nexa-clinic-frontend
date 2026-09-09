@@ -3,6 +3,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import AppLayout from "../components/layout/AppLayout";
 import LoginPage from "../pages/auth/LoginPage";
 import PatientsListPage from "../pages/patients/PatientsListPage";
+import MasterDataPage from "../pages/master-data/MasterDataPage";
 import ForbiddenPage from "../pages/ForbiddenPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import { ROLES } from "../utils/roles";
@@ -31,8 +32,16 @@ export default function AppRoutes() {
           }
         />
 
-        {/* Poli, Dokter, Pendaftaran, Antrean, Pemeriksaan, Dashboard menyusul
-            di iterasi berikutnya begitu masing-masing dicicil. */}
+        <Route
+          path="/master-data"
+          element={
+            <ProtectedRoute roles={[ROLES.ADMIN]}>
+              <MasterDataPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Pendaftaran, Antrean, Pemeriksaan, Dashboard menyusul di iterasi berikutnya. */}
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />

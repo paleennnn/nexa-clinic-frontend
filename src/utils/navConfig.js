@@ -1,4 +1,4 @@
-import { Users, LayoutDashboard } from "lucide-react";
+import { Users, LayoutDashboard, Stethoscope } from "lucide-react";
 import { ROLES } from "./roles";
 
 // Single source of truth for the sidebar. Add an entry here whenever a new
@@ -17,5 +17,13 @@ export const NAV_ITEMS = [
     path: "/patients",
     icon: Users,
     roles: [ROLES.ADMIN, ROLES.PETUGAS_PENDAFTARAN],
+  },
+  {
+    label: "Poli & Dokter",
+    path: "/master-data",
+    icon: Stethoscope,
+    // Kelola master data ini khusus Admin — role lain memakainya lewat dropdown
+    // di modul Pendaftaran (menyusul), bukan mengelola langsung di sini.
+    roles: [ROLES.ADMIN],
   },
 ];
