@@ -7,6 +7,7 @@ import { ROLES, getDefaultPathForRole } from "../utils/roles";
 import { useAuth } from "../hooks/useAuth";
 
 const LoginPage = lazy(() => import("../pages/auth/LoginPage"));
+const DashboardPage = lazy(() => import("../pages/dashboard/DashboardPage"));
 const PatientsListPage = lazy(() => import("../pages/patients/PatientsListPage"));
 const MasterDataPage = lazy(() => import("../pages/master-data/MasterDataPage"));
 const RegistrationsListPage = lazy(() => import("../pages/registrations/RegistrationsListPage"));
@@ -98,8 +99,14 @@ export default function AppRoutes() {
               </ProtectedRoute>
             }
           />
-
-          {/* Dashboard menyusul. */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />

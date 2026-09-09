@@ -10,7 +10,6 @@ export const NAV_ITEMS = [
     path: "/dashboard",
     icon: LayoutDashboard,
     roles: null,
-    comingSoon: true,
   },
   {
     label: "Data Pasien",
