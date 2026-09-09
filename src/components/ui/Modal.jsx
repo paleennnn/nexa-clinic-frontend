@@ -17,7 +17,7 @@ export default function Modal({ open, onClose, title, children, footer, size = "
 
   if (!open) return null;
 
-  const widths = { sm: "max-w-sm", md: "max-w-lg", lg: "max-w-2xl" };
+  const widths = { sm: "max-w-sm", md: "max-w-lg", lg: "max-w-2xl", xl: "max-w-4xl" };
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">

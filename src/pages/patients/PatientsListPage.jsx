@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Search, Pencil, Trash2, Eye } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Eye, History } from "lucide-react";
 import toast from "react-hot-toast";
 import { usePatientsList, useDeletePatient } from "../../hooks/usePatients";
 import { GENDER_LABELS, formatDate } from "../../utils/formatters";
@@ -11,6 +11,7 @@ import Pagination from "../../components/ui/Pagination";
 import ConfirmDialog from "../../components/ui/ConfirmDialog";
 import PatientFormModal from "./PatientFormModal";
 import PatientDetailModal from "./PatientDetailModal";
+import PatientHistoryModal from "./PatientHistoryModal";
 
 const LIMIT = 10;
 
@@ -22,6 +23,7 @@ export default function PatientsListPage() {
   const [formOpen, setFormOpen] = useState(false);
   const [editingPatient, setEditingPatient] = useState(null);
   const [detailPatient, setDetailPatient] = useState(null);
+  const [historyPatient, setHistoryPatient] = useState(null);
   const [deletingPatient, setDeletingPatient] = useState(null);
 
   const { data, isLoading, isError, error } = usePatientsList({ search, page, limit: LIMIT });
@@ -140,6 +142,13 @@ export default function PatientsListPage() {
                           <Eye className="h-4 w-4" />
                         </button>
                         <button
+                          onClick={() => setHistoryPatient(patient)}
+                          title="Riwayat pemeriksaan"
+                          className="rounded-md p-1.5 text-ink-soft hover:bg-bg hover:text-ink cursor-pointer"
+                        >
+                          <History className="h-4 w-4" />
+                        </button>
+                        <button
                           onClick={() => openEdit(patient)}
                           title="Ubah data"
                           className="rounded-md p-1.5 text-ink-soft hover:bg-bg hover:text-brand cursor-pointer"
@@ -176,6 +185,12 @@ export default function PatientsListPage() {
         open={Boolean(detailPatient)}
         onClose={() => setDetailPatient(null)}
         patient={detailPatient}
+      />
+
+      <PatientHistoryModal
+        open={Boolean(historyPatient)}
+        onClose={() => setHistoryPatient(null)}
+        patient={historyPatient}
       />
 
       <ConfirmDialog

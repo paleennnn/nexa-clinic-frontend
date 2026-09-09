@@ -1,4 +1,4 @@
-import { Users, LayoutDashboard, Stethoscope, ClipboardList, Radio } from "lucide-react";
+import { Users, LayoutDashboard, Stethoscope, ClipboardList, Radio, HeartPulse } from "lucide-react";
 import { ROLES } from "./roles";
 
 // Single source of truth for the sidebar. Add an entry here whenever a new
@@ -28,9 +28,15 @@ export const NAV_ITEMS = [
     label: "Antrean",
     path: "/queue",
     icon: Radio,
-    // Semua role terautentikasi boleh lihat — Dokter perlu memantau
-    // antrean poli miliknya, Petugas/Admin yang memanggil antrean.
+    // Dokter perlu memantau antrean poli miliknya, Petugas/Admin yang memanggil antrean.
     roles: null,
+  },
+  {
+    label: "Pemeriksaan",
+    path: "/exams",
+    icon: HeartPulse,
+    // Hanya Dokter yang bisa membuat rekam medis (POST /medical-records authorize('DOKTER')).
+    roles: [ROLES.DOKTER],
   },
   {
     label: "Poli & Dokter",
