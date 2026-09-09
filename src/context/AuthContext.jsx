@@ -31,9 +31,12 @@ export function AuthProvider({ children }) {
   const login = useCallback(async (email, password) => {
     const result = await authApi.login(email, password);
     tokenStorage.set(result.token);
-    setUser(result.user);
+    // /auth/login only returns { id, name, email, role }; /auth/me additionally
+    // includes `doctor` (needed to scope a doctor's own poli in the Queue board).
+    const fullProfile = await authApi.getMe();
+    setUser(fullProfile);
     setStatus("authenticated");
-    return result.user;
+    return fullProfile;
   }, []);
 
   const logout = useCallback(async () => {

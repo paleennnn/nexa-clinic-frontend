@@ -4,6 +4,8 @@ import AppLayout from "../components/layout/AppLayout";
 import LoginPage from "../pages/auth/LoginPage";
 import PatientsListPage from "../pages/patients/PatientsListPage";
 import MasterDataPage from "../pages/master-data/MasterDataPage";
+import RegistrationsListPage from "../pages/registrations/RegistrationsListPage";
+import QueueBoardPage from "../pages/queue/QueueBoardPage";
 import ForbiddenPage from "../pages/ForbiddenPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import { ROLES } from "../utils/roles";
@@ -41,7 +43,23 @@ export default function AppRoutes() {
           }
         />
 
-        {/* Pendaftaran, Antrean, Pemeriksaan, Dashboard menyusul di iterasi berikutnya. */}
+        <Route
+          path="/registrations"
+          element={
+            <ProtectedRoute roles={[ROLES.ADMIN, ROLES.PETUGAS_PENDAFTARAN]}>
+              <RegistrationsListPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/queue"
+          element={
+            <ProtectedRoute>
+              <QueueBoardPage />
+            </ProtectedRoute>
+          }
+        />
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />
