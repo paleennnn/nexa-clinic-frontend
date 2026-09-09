@@ -3,7 +3,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import AppLayout from "../components/layout/AppLayout";
 import Spinner from "../components/ui/Spinner";
-import { ROLES } from "../utils/roles";
+import { ROLES, getDefaultPathForRole } from "../utils/roles";
+import { useAuth } from "../hooks/useAuth";
 
 const LoginPage = lazy(() => import("../pages/auth/LoginPage"));
 const PatientsListPage = lazy(() => import("../pages/patients/PatientsListPage"));
@@ -11,6 +12,7 @@ const MasterDataPage = lazy(() => import("../pages/master-data/MasterDataPage"))
 const RegistrationsListPage = lazy(() => import("../pages/registrations/RegistrationsListPage"));
 const QueueBoardPage = lazy(() => import("../pages/queue/QueueBoardPage"));
 const ExamQueuePage = lazy(() => import("../pages/exams/ExamQueuePage"));
+const ActivityHistoryPage = lazy(() => import("../pages/history/ActivityHistoryPage"));
 const ForbiddenPage = lazy(() => import("../pages/ForbiddenPage"));
 const NotFoundPage = lazy(() => import("../pages/NotFoundPage"));
 
@@ -20,6 +22,11 @@ function PageFallback() {
       <Spinner label="Memuat halaman..." />
     </div>
   );
+}
+
+function IndexRedirect() {
+  const { user } = useAuth();
+  return <Navigate to={getDefaultPathForRole(user?.role)} replace />;
 }
 
 export default function AppRoutes() {
@@ -36,7 +43,7 @@ export default function AppRoutes() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Navigate to="/patients" replace />} />
+          <Route index element={<IndexRedirect />} />
 
           <Route
             path="/patients"
@@ -79,6 +86,15 @@ export default function AppRoutes() {
             element={
               <ProtectedRoute roles={[ROLES.DOKTER]}>
                 <ExamQueuePage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/activity-history"
+            element={
+              <ProtectedRoute>
+                <ActivityHistoryPage />
               </ProtectedRoute>
             }
           />

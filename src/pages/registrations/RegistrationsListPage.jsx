@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Plus, Pencil, Eye } from "lucide-react";
-import { useRegistrationsList } from "../../hooks/useRegistrations";
+import { Plus, Pencil, Eye, UserCheck, Stethoscope } from "lucide-react";
+import toast from "react-hot-toast";
+import { useRegistrationsList, useUpdateRegistration } from "../../hooks/useRegistrations";
 import { PAYMENT_TYPE_LABELS, REGISTRATION_STATUS_META } from "../../utils/statusMeta";
 import { formatDate } from "../../utils/formatters";
 import Button from "../../components/ui/Button";
@@ -25,6 +26,20 @@ export default function RegistrationsListPage() {
   const [detailRegistration, setDetailRegistration] = useState(null);
 
   const { data, isLoading, isError, error } = useRegistrationsList({ date, status, page, limit: LIMIT });
+  const updateRegistration = useUpdateRegistration();
+
+  const handleQuickStatus = async (registration, nextStatus) => {
+    try {
+      await updateRegistration.mutateAsync({
+        id: registration.id,
+        payload: { status: nextStatus },
+      });
+      const label = REGISTRATION_STATUS_META[nextStatus]?.label || nextStatus;
+      toast.success(`Status pasien diubah menjadi ${label}`);
+    } catch (err) {
+      toast.error(err.message || "Gagal memperbarui status");
+    }
+  };
 
   const openCreate = () => {
     setEditingRegistration(null);
@@ -137,7 +152,33 @@ export default function RegistrationsListPage() {
                       <td className="px-4 py-3 text-ink-soft">{formatDate(reg.visitDate)}</td>
                       <td className="px-4 py-3 text-ink-soft">{PAYMENT_TYPE_LABELS[reg.paymentType]}</td>
                       <td className="px-4 py-3">
-                        <Badge tone={statusMeta.tone}>{statusMeta.label}</Badge>
+                        <div className="flex items-center gap-2">
+                          <Badge tone={statusMeta.tone}>{statusMeta.label}</Badge>
+                          {reg.status === "MENUNGGU" && (
+                            <Button
+                              size="xs"
+                              variant="secondary"
+                              onClick={() => handleQuickStatus(reg, "CHECK_IN")}
+                              disabled={updateRegistration.isPending}
+                              title="Tandai pasien sudah check-in"
+                            >
+                              <UserCheck className="h-3 w-3 text-brand" />
+                              Check In
+                            </Button>
+                          )}
+                          {reg.status === "CHECK_IN" && (
+                            <Button
+                              size="xs"
+                              variant="secondary"
+                              onClick={() => handleQuickStatus(reg, "PEMERIKSAAN")}
+                              disabled={updateRegistration.isPending}
+                              title="Kirim ke dokter untuk diperiksa"
+                            >
+                              <Stethoscope className="h-3 w-3 text-brand" />
+                              Siap Periksa
+                            </Button>
+                          )}
+                        </div>
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex justify-end gap-1">

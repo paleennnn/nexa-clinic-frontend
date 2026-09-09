@@ -10,3 +10,10 @@ export const ROLE_LABELS = {
   [ROLES.DOKTER]: "Dokter",
   [ROLES.PETUGAS_PENDAFTARAN]: "Petugas Pendaftaran",
 };
+
+export const getDefaultPathForRole = (role) => {
+  if (role === ROLES.DOKTER) {
+    return "/exams";
+  }
+  return "/patients";
+};

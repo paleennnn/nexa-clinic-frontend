@@ -20,7 +20,10 @@ export function useCallQueue() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: queuesApi.callQueue,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: [QUEUES_KEY] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUEUES_KEY] });
+      queryClient.invalidateQueries({ queryKey: [REGISTRATIONS_KEY] });
+    },
   });
 }
 

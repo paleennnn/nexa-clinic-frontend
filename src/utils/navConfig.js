@@ -1,4 +1,4 @@
-import { Users, LayoutDashboard, Stethoscope, ClipboardList, Radio, HeartPulse } from "lucide-react";
+import { Users, LayoutDashboard, Stethoscope, ClipboardList, Radio, HeartPulse, History } from "lucide-react";
 import { ROLES } from "./roles";
 
 // Single source of truth for the sidebar. Add an entry here whenever a new
@@ -37,6 +37,13 @@ export const NAV_ITEMS = [
     icon: HeartPulse,
     // Hanya Dokter yang bisa membuat rekam medis (POST /medical-records authorize('DOKTER')).
     roles: [ROLES.DOKTER],
+  },
+  {
+    label: "Riwayat Aktivitas",
+    path: "/activity-history",
+    icon: History,
+    // Terbuka untuk semua role. Dokter dibatasi melihat riwayat pasiennya sendiri.
+    roles: null,
   },
   {
     label: "Poli & Dokter",

@@ -10,3 +10,17 @@ export const createMedicalRecord = (payload) =>
 // GET /api/medical-records/:patientId -> MedicalRecord[] (any authenticated role)
 export const getPatientMedicalHistory = (patientId) =>
   axiosClient.get(`/medical-records/${patientId}`).then((res) => res.data);
+
+// GET /api/medical-records?search=&date=&poliId=&page=&limit= -> { items, pagination }
+export const listMedicalRecords = (params = {}) =>
+  axiosClient
+    .get("/medical-records", {
+      params: {
+        search: params.search || undefined,
+        date: params.date || undefined,
+        poliId: params.poliId || undefined,
+        page: params.page,
+        limit: params.limit,
+      },
+    })
+    .then((res) => res.data);

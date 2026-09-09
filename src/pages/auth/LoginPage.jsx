@@ -6,6 +6,7 @@ import { Navigate } from "react-router-dom";
 import { Cross, KeyRound, UserCheck } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "../../hooks/useAuth";
+import { getDefaultPathForRole } from "../../utils/roles";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
 
@@ -36,7 +37,7 @@ const DEMO_ACCOUNTS = [
 ];
 
 export default function LoginPage() {
-  const { login, status } = useAuth();
+  const { login, status, user } = useAuth();
   const [submitting, setSubmitting] = useState(false);
   const {
     register,
@@ -46,7 +47,7 @@ export default function LoginPage() {
   } = useForm({ resolver: zodResolver(loginSchema) });
 
   if (status === "authenticated") {
-    return <Navigate to="/patients" replace />;
+    return <Navigate to={getDefaultPathForRole(user?.role)} replace />;
   }
 
   const onSubmit = async (values) => {

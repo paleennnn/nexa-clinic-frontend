@@ -1,8 +1,13 @@
 import { Link } from "react-router-dom";
 import { ShieldAlert } from "lucide-react";
 import Button from "../components/ui/Button";
+import { useAuth } from "../hooks/useAuth";
+import { getDefaultPathForRole } from "../utils/roles";
 
 export default function ForbiddenPage() {
+  const { user } = useAuth();
+  const homePath = getDefaultPathForRole(user?.role);
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-bg px-4 text-center">
       <ShieldAlert className="h-10 w-10 text-rust" />
@@ -10,9 +15,9 @@ export default function ForbiddenPage() {
       <p className="max-w-sm text-sm text-ink-soft">
         Role kamu tidak memiliki izin untuk membuka halaman ini.
       </p>
-      <Link to="/patients">
+      <Link to={homePath}>
         <Button variant="secondary" className="mt-2">
-          Kembali ke Data Pasien
+          Kembali ke Halaman Utama
         </Button>
       </Link>
     </div>
